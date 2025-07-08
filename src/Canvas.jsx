@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { predict } from './predict.js';
 
 const GRID_SIZE = 28;
 const CELL_SIZE = 15; // px, adjust as needed
 const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
 
-export default function CanvasGrid() {
+export default function Canvas({ onGridChange }) {
 	const canvasRef = useRef(null);
 	const [drawing, setDrawing] = useState(false);
 	const [grid, setGrid] = useState(
@@ -17,7 +16,9 @@ export default function CanvasGrid() {
 		ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 		for (let y = 0; y < GRID_SIZE; y++) {
 			for (let x = 0; x < GRID_SIZE; x++) {
-				ctx.fillStyle = gridData[y][x] ? '#FFFFFF' : '#000000';
+				const v = gridData[y][x];
+				const shade = Math.round(v * 255);
+				ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
 				ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 			}
 		}
@@ -39,6 +40,11 @@ export default function CanvasGrid() {
 		const ctx = canvasRef.current.getContext('2d');
 		drawGrid(ctx, grid);
 	}, [grid]);
+
+	// Notify parent on grid change
+	React.useEffect(() => {
+		if (onGridChange) onGridChange(grid);
+	}, [grid, onGridChange]);
 
 	const getCell = (e) => {
 		const rect = canvasRef.current.getBoundingClientRect();
@@ -64,19 +70,28 @@ export default function CanvasGrid() {
 
 	const handleDraw = (e) => {
 		const { x, y } = getCell(e);
-		if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
-			setGrid(prev => {
-				if (prev[y][x] === 1) return prev;
-				const newGrid = prev.map(row => [...row]);
-				newGrid[y][x] = 1;
-				return newGrid;
+		const deltas = [
+			{ dx: 0, dy: 0, value: 0.5 }, // center
+			{ dx: -1, dy: 0, value: 0.25 }, // left
+			{ dx: 1, dy: 0, value: 0.25 }, // right
+			{ dx: 0, dy: -1, value: 0.25 }, // up
+			{ dx: 0, dy: 1, value: 0.25 }, // down
+			{ dx: -1, dy: -1, value: 0.1 }, // up-left
+			{ dx: 1, dy: -1, value: 0.1 }, // up-right
+			{ dx: -1, dy: 1, value: 0.1 }, // down-left
+			{ dx: 1, dy: 1, value: 0.1 }, // down-right
+		];
+		setGrid(prev => {
+			const newGrid = prev.map(row => [...row]);
+			deltas.forEach(({ dx, dy, value }) => {
+				const nx = x + dx;
+				const ny = y + dy;
+				if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+					newGrid[ny][nx] = Math.min(1, newGrid[ny][nx] + value);
+				}
 			});
-		}
-	};
-
-	const handlePredict = async () => {
-		const result = await predict(grid);
-		console.log('Predicted digit:', result.prediction, 'Probabilities:', result.probabilities);
+			return newGrid;
+		});
 	};
 
 	const handleClear = () => {
@@ -96,7 +111,6 @@ export default function CanvasGrid() {
 				onMouseMove={handlePointerMove}
 			/>
 			<div style={{ marginBottom: 8 }}>
-				<button onClick={handlePredict} style={{ marginRight: 8 }}>Predict</button>
 				<button onClick={handleClear}>Clear</button>
 			</div>
 		</div>

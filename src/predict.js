@@ -42,7 +42,7 @@ export async function predict(input28x28) {
 	const input = input28x28.flat(); // [784]
 
 	// Load weights
-	const res = await fetch('/model_weights.json');
+	const res = await fetch('/model_weights-32x16.json');
 	const weights = await res.json();
 
 	// Layer 1: Linear(784, 32) + ReLU

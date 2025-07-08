@@ -1,6 +1,10 @@
-import CanvasGrid from './CanvasGrid';
+import React, { useState } from 'react';
+import Canvas from './Canvas.jsx';
+import NeuralNetwork from './NeuralNetwork.jsx';
 
 function App() {
+    const emptyGrid = Array(28).fill(0).map(() => Array(28).fill(0));
+    const [grid, setGrid] = useState(emptyGrid);
 
     return (
         <>
@@ -9,9 +13,10 @@ function App() {
                     <h1>Neural Network Visualizer</h1>
                 </div>
                 <div className="canvas">
-                    <CanvasGrid/>
+                    <Canvas onGridChange={setGrid} />
                 </div>
                 <div className="network">
+                    <NeuralNetwork grid={grid} />
                 </div>
             </div>
         </>
