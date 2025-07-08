@@ -2,12 +2,20 @@ import CanvasGrid from './CanvasGrid';
 
 function App() {
 
-  return (
-    <>
-      <h1>Hello World</h1>
-      <CanvasGrid />
-    </>
-  )
+    return (
+        <>
+            <div className="grid">
+                <div className="title">
+                    <h1>Neural Network Visualizer</h1>
+                </div>
+                <div className="canvas">
+                    <CanvasGrid/>
+                </div>
+                <div className="network">
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default App

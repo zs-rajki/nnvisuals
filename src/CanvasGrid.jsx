@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { predict } from './predict.js';
 
 const GRID_SIZE = 28;
-const CELL_SIZE = 8; // px, adjust as needed
+const CELL_SIZE = 15; // px, adjust as needed
 const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
 
 export default function CanvasGrid() {
@@ -17,7 +17,7 @@ export default function CanvasGrid() {
 		ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 		for (let y = 0; y < GRID_SIZE; y++) {
 			for (let x = 0; x < GRID_SIZE; x++) {
-				ctx.fillStyle = gridData[y][x] ? '#222' : '#fff';
+				ctx.fillStyle = gridData[y][x] ? '#FFFFFF' : '#000000';
 				ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 			}
 		}

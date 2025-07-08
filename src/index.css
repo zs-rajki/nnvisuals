@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #000000;
+}
+
+.grid {
+    display: grid;
+    grid-template-areas:
+    'title network'
+    'canvas network';
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+}
+
+.title {
+    grid-area: title;
+    color: #ffffff;
+}
+
+.canvas {
+    grid-area: canvas;
+}
+
+.network {
+    grid-area: network;
+}
