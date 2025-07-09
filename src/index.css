@@ -46,3 +46,15 @@ body {
     color: #FFFFFF;
     text-align: center;
 }
+
+footer {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #FFFFFF;
+    text-align: center;
+    background: linear-gradient(to bottom, #151616, #000000);
+    width: 100vw;
+    border-top: 1px solid #858585;
+    padding: 2rem 0;
+}

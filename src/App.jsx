@@ -26,6 +26,9 @@ function App() {
                     </div>
                 </div>
             </div>
+            <footer>
+                &copy; <span>{new Date().getFullYear()}</span> Zsombor Rajki. All Rights Reserved.
+            </footer>
         </>
     )
 }
