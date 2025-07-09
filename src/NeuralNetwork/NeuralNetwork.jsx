@@ -3,12 +3,12 @@ import styles from './NeuralNetwork.module.css';
 import Node from "./Node/Node.jsx";
 import { predict } from "../predict.js";
 
-export default function NeuralNetwork({ grid }) {
+export default function NeuralNetwork({ grid, center}) {
     const [probabilities, setProbabilities] = useState([0,0,0,0,0,0,0,0,0,0]);
 
     useEffect(() => {
         let isMounted = true;
-        predict(grid).then(result => {
+        predict(grid, center).then(result => {
             if (isMounted) setProbabilities(result.probabilities);
         });
         return () => { isMounted = false; };

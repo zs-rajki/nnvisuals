@@ -19,12 +19,13 @@ body {
     'canvas network';
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
-    margin: 1rem;
+    margin: 3rem;
 }
 
 .title {
     grid-area: title;
-    color: #ffffff;
+    color: #FFFFFF;
+    text-align: center;
 }
 
 .canvas {
@@ -33,4 +34,15 @@ body {
 
 .network {
     grid-area: network;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.network > div {
+    display: flex;
+    flex-direction: column;
+}
+.network h1 {
+    color: #FFFFFF;
+    text-align: center;
 }

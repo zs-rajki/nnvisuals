@@ -16,7 +16,14 @@ function App() {
                     <Canvas onGridChange={setGrid} />
                 </div>
                 <div className="network">
-                    <NeuralNetwork grid={grid} />
+                    <div>
+                        <NeuralNetwork grid={grid} center={false}/>
+                        <h1>original</h1>
+                    </div>
+                    <div>
+                        <NeuralNetwork grid={grid} center={true}/>
+                        <h1>centered</h1>
+                    </div>
                 </div>
             </div>
         </>
