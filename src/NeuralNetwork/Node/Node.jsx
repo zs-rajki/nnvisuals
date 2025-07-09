@@ -1,4 +1,5 @@
 import React from "react";
+import styles from './Node.module.css';
 
 // value: number between 0 and 1
 const Node = ({ value }) => {

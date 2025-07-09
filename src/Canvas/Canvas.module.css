@@ -1,0 +1,10 @@
+.canvasContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.canvas {
+    border: 1px solid #888;
+    touch-action: none;
+    margin-bottom: 12;
+}

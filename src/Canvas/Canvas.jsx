@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import styles from './Canvas.module.css';
 
 const GRID_SIZE = 28;
 const CELL_SIZE = 15; // px, adjust as needed
@@ -99,12 +100,12 @@ export default function Canvas({ onGridChange }) {
 	};
 
 	return (
-		<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+		<div className={styles.canvasContainer}>
 			<canvas
 				ref={canvasRef}
 				width={CANVAS_SIZE}
 				height={CANVAS_SIZE}
-				style={{ border: '1px solid #888', touchAction: 'none', marginBottom: 12 }}
+				className={styles.canvas}
 				onMouseDown={handlePointerDown}
 				onMouseUp={handlePointerUp}
 				onMouseLeave={handlePointerUp}

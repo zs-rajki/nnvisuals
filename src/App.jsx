@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Canvas from './Canvas.jsx';
-import NeuralNetwork from './NeuralNetwork.jsx';
+import Canvas from './Canvas/Canvas.jsx';
+import NeuralNetwork from './NeuralNetwork/NeuralNetwork.jsx';
 
 function App() {
     const emptyGrid = Array(28).fill(0).map(() => Array(28).fill(0));

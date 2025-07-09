@@ -1,0 +1,14 @@
+.finalLayer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.finalNode {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+.finalNode h1 {
+    color: #ffffff;
+}
