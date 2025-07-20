@@ -20,6 +20,7 @@ body {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
     margin: 3rem;
+    width: 100vw;
 }
 
 .title {
@@ -35,16 +36,9 @@ body {
 .network {
     grid-area: network;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-}
-.network > div {
-    display: flex;
-    flex-direction: column;
-}
-.network h1 {
-    color: #FFFFFF;
-    text-align: center;
+    width: 100%;
 }
 
 footer {

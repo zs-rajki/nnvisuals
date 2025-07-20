@@ -99,7 +99,7 @@ export async function predict(input28x28, center) {
 	} else {
 		input = input28x28.flat(); // [784]
 	}
-	const res = await fetch('/model_weights-64x32x16.json');
+	const res = await fetch('/model_weights-64x32x16x16.json');
 	const weights = await res.json();
 
 	// Identify layer numbers from keys like "model.1.weight"
@@ -109,6 +109,7 @@ export async function predict(input28x28, center) {
 		.sort((a, b) => a - b); // [1, 3, 5, 7, ...]
 
 	let x = [input]; // batch size 1
+	const activations = [input.slice()]; // Store input as first activation (flattened)
 
 	for (let i = 0; i < layerNumbers.length; i++) {
 		const n = layerNumbers[i];
@@ -123,6 +124,8 @@ export async function predict(input28x28, center) {
 		if (i < layerNumbers.length - 1) {
 			x = relu(x);
 		}
+		// Store activations for this layer (flattened)
+		activations.push(x[0].slice());
 	}
 
 	const logits = x[0];
@@ -133,6 +136,7 @@ export async function predict(input28x28, center) {
 
 	return {
 		prediction: argmax(logits),
-		probabilities: probabilities
+		probabilities: probabilities,
+		activations: activations
 	};
 }

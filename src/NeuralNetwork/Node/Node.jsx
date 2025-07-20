@@ -2,7 +2,7 @@ import React from "react";
 import styles from './Node.module.css';
 
 // value: number between 0 and 1
-const Node = ({ value }) => {
+const Node = ({ value, size }) => {
   // Clamp value between 0 and 1
   const clamped = Math.max(0, Math.min(1, value));
   // Calculate grayscale color
@@ -10,14 +10,15 @@ const Node = ({ value }) => {
   const fillColor = `rgb(${gray}, ${gray}, ${gray})`;
 
   return (
-    <svg width="50" height="50">
+    <svg width={size} height={size}>
       <circle
-        cx="25"
-        cy="25"
-        r="24"
+        className={styles.circle}
+        cx={size/2}
+        cy={size/2}
+        r={(size-size/25)/2}
         fill={fillColor}
         stroke="white"
-        strokeWidth="2"
+        strokeWidth={size/25}
       />
     </svg>
   );
