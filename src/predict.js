@@ -99,7 +99,7 @@ export async function predict(input28x28, center) {
 	} else {
 		input = input28x28.flat(); // [784]
 	}
-	const res = await fetch('/model_weights-64x32x16x16.json');
+	const res = await fetch(`${import.meta.env.BASE_URL}model_weights-64x32x16x16.json`);
 	const weights = await res.json();
 
 	// Identify layer numbers from keys like "model.1.weight"
