@@ -19,7 +19,7 @@ body {
     'canvas network';
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
-    margin: 3rem;
+    padding: 3rem;
     width: 100vw;
 }
 

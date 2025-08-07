@@ -137,6 +137,7 @@ export async function predict(input28x28, center) {
 	return {
 		prediction: argmax(logits),
 		probabilities: probabilities,
-		activations: activations
+		activations: activations,
+		weights: weights
 	};
 }
