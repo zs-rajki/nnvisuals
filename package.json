@@ -1,9 +1,9 @@
 {
-  "name": "neural-network-visualizer",
+  "name": "nn-visualizer",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://zs-rajki.github.io/Neural-Network-Visualizer",
+  "homepage": "https://zs-rajki.github.io/nnVisualizer",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
