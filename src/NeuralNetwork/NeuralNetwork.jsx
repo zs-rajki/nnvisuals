@@ -15,6 +15,7 @@ export default function NeuralNetwork({ grid, center}) {
     useEffect(() => {
         let isMounted = true;
         predict(grid, center).then(result => {
+
             if (isMounted) {
                 setProbabilities(result.probabilities);
                 setActivations(result.activations);

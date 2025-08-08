@@ -1,10 +1,21 @@
-.canvasContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.canvasContainer {
+	width: 100%;
+	max-width: 500px; /* limit max canvas size */
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
+
 .canvas {
-    border: 1px solid #888;
-    touch-action: none;
-    margin-bottom: 12;
+	touch-action: none;
+	border: 1px solid #999;
+	display: block;
+}
+
+.clearButton {
+	margin-top: 12px;
+	padding: 6px 12px;
+	font-size: 16px;
+	cursor: pointer;
 }

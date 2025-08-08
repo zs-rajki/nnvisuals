@@ -1,87 +1,123 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import styles from './Canvas.module.css';
 
 const GRID_SIZE = 28;
-const CELL_SIZE = 15; // px, adjust as needed
-const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
 
 export default function Canvas({ onGridChange }) {
+	const containerRef = useRef(null);
 	const canvasRef = useRef(null);
-	const [drawing, setDrawing] = useState(false);
 	const [grid, setGrid] = useState(
 		Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(0))
 	);
+	const [drawing, setDrawing] = useState(false);
+	const [cellSize, setCellSize] = useState(10); // dynamic later
 
-	// Draw the grid on the canvas
-	const drawGrid = (ctx, gridData) => {
-		ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-		for (let y = 0; y < GRID_SIZE; y++) {
-			for (let x = 0; x < GRID_SIZE; x++) {
-				const v = gridData[y][x];
-				const shade = Math.round(v * 255);
-				ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
-				ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-			}
-		}
-		ctx.strokeStyle = '#ccc';
-		for (let i = 0; i <= GRID_SIZE; i++) {
-			ctx.beginPath();
-			ctx.moveTo(i * CELL_SIZE, 0);
-			ctx.lineTo(i * CELL_SIZE, CANVAS_SIZE);
-			ctx.stroke();
-			ctx.beginPath();
-			ctx.moveTo(0, i * CELL_SIZE);
-			ctx.lineTo(CANVAS_SIZE, i * CELL_SIZE);
-			ctx.stroke();
-		}
-	};
+	// Resize canvas on window/container resize
+	const resizeCanvas = useCallback(() => {
+		const container = containerRef.current;
+		if (!container) return;
 
-	// Redraw on grid change
-	React.useEffect(() => {
-		const ctx = canvasRef.current.getContext('2d');
-		drawGrid(ctx, grid);
+		const width = container.clientWidth;
+		const size = Math.floor(width / GRID_SIZE);
+		setCellSize(size);
+
+		const canvas = canvasRef.current;
+		const ctx = canvas.getContext('2d');
+		const dpr = window.devicePixelRatio || 1;
+
+		canvas.width = GRID_SIZE * size * dpr;
+		canvas.height = GRID_SIZE * size * dpr;
+		canvas.style.width = `${GRID_SIZE * size}px`;
+		canvas.style.height = `${GRID_SIZE * size}px`;
+
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // ensure crisp rendering
+		drawGrid(ctx, grid, size);
 	}, [grid]);
 
-	// Notify parent on grid change
-	React.useEffect(() => {
+	// Initial + resize effect
+	useEffect(() => {
+		resizeCanvas();
+		window.addEventListener('resize', resizeCanvas);
+		return () => window.removeEventListener('resize', resizeCanvas);
+	}, [resizeCanvas]);
+
+	// Redraw when grid changes
+	useEffect(() => {
+		const ctx = canvasRef.current.getContext('2d');
+		drawGrid(ctx, grid, cellSize);
+	}, [grid, cellSize]);
+
+	// Notify parent
+	useEffect(() => {
 		if (onGridChange) onGridChange(grid);
 	}, [grid, onGridChange]);
 
-	const getCell = (e) => {
+    // -----------Canvas without grid--------------------------
+    // 
+	// const drawGrid = (ctx, gridData, size) => {
+	// 	ctx.clearRect(0, 0, GRID_SIZE * size, GRID_SIZE * size);
+	// 	for (let y = 0; y < GRID_SIZE; y++) {
+	// 		for (let x = 0; x < GRID_SIZE; x++) {
+	// 			const val = gridData[y][x];
+	// 			const shade = Math.round(val * 255);
+	// 			ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
+	// 			ctx.fillRect(x * size, y * size, size, size);
+	// 		}
+	// 	}
+	// };
+
+    const drawGrid = (ctx, gridData, size) => {
+        ctx.clearRect(0, 0, GRID_SIZE * size, GRID_SIZE * size);
+    
+        // Fill each cell with grayscale color
+        for (let y = 0; y < GRID_SIZE; y++) {
+            for (let x = 0; x < GRID_SIZE; x++) {
+                const val = gridData[y][x];
+                const shade = Math.round(val * 255);
+                ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
+                ctx.fillRect(x * size, y * size, size, size);
+            }
+        }
+    
+        // Draw grid lines
+        ctx.strokeStyle = 'rgba(200, 200, 200, 0.7)'; // light gray
+        ctx.lineWidth = 0.5;
+    
+        for (let i = 0; i <= GRID_SIZE; i++) {
+            // vertical line
+            ctx.beginPath();
+            ctx.moveTo(i * size, 0);
+            ctx.lineTo(i * size, GRID_SIZE * size);
+            ctx.stroke();
+    
+            // horizontal line
+            ctx.beginPath();
+            ctx.moveTo(0, i * size);
+            ctx.lineTo(GRID_SIZE * size, i * size);
+            ctx.stroke();
+        }
+    };
+
+	const getCellFromEvent = (e) => {
 		const rect = canvasRef.current.getBoundingClientRect();
-		const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
-		const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
+		const x = Math.floor((e.clientX - rect.left) / cellSize);
+		const y = Math.floor((e.clientY - rect.top) / cellSize);
 		return { x, y };
 	};
 
-	const handlePointerDown = (e) => {
-		setDrawing(true);
-		handleDraw(e);
-	};
-
-	const handlePointerUp = () => {
-		setDrawing(false);
-	};
-
-	const handlePointerMove = (e) => {
-		if (drawing) {
-			handleDraw(e);
-		}
-	};
-
-	const handleDraw = (e) => {
-		const { x, y } = getCell(e);
+	const applyStroke = (x, y) => {
 		const deltas = [
-			{ dx: 0, dy: 0, value: 0.5 }, // center
-			{ dx: -1, dy: 0, value: 0.25 }, // left
-			{ dx: 1, dy: 0, value: 0.25 }, // right
-			{ dx: 0, dy: -1, value: 0.25 }, // up
-			{ dx: 0, dy: 1, value: 0.25 }, // down
-			{ dx: -1, dy: -1, value: 0.1 }, // up-left
-			{ dx: 1, dy: -1, value: 0.1 }, // up-right
-			{ dx: -1, dy: 1, value: 0.1 }, // down-left
-			{ dx: 1, dy: 1, value: 0.1 }, // down-right
+			{ dx: 0, dy: 0, value: 0.5 },
+			{ dx: -1, dy: 0, value: 0.25 },
+			{ dx: 1, dy: 0, value: 0.25 },
+			{ dx: 0, dy: -1, value: 0.25 },
+			{ dx: 0, dy: 1, value: 0.25 },
+			{ dx: -1, dy: -1, value: 0.1 },
+			{ dx: 1, dy: -1, value: 0.1 },
+			{ dx: -1, dy: 1, value: 0.1 },
+			{ dx: 1, dy: 1, value: 0.1 },
 		];
+
 		setGrid(prev => {
 			const newGrid = prev.map(row => [...row]);
 			deltas.forEach(({ dx, dy, value }) => {
@@ -95,25 +131,35 @@ export default function Canvas({ onGridChange }) {
 		});
 	};
 
+	const handlePointerDown = (e) => {
+		setDrawing(true);
+		const { x, y } = getCellFromEvent(e);
+		applyStroke(x, y);
+	};
+
+	const handlePointerMove = (e) => {
+		if (!drawing) return;
+		const { x, y } = getCellFromEvent(e);
+		applyStroke(x, y);
+	};
+
+	const handlePointerUp = () => setDrawing(false);
+
 	const handleClear = () => {
 		setGrid(Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(0)));
 	};
 
 	return (
-		<div className={styles.canvasContainer}>
+		<div ref={containerRef} className={styles.canvasContainer}>
 			<canvas
 				ref={canvasRef}
-				width={CANVAS_SIZE}
-				height={CANVAS_SIZE}
 				className={styles.canvas}
-				onMouseDown={handlePointerDown}
-				onMouseUp={handlePointerUp}
-				onMouseLeave={handlePointerUp}
-				onMouseMove={handlePointerMove}
+				onPointerDown={handlePointerDown}
+				onPointerMove={handlePointerMove}
+				onPointerUp={handlePointerUp}
+				onPointerLeave={handlePointerUp}
 			/>
-			<div style={{ marginBottom: 8 }}>
-				<button onClick={handleClear}>Clear</button>
-			</div>
+			<button className={styles.clearButton} onClick={handleClear}>Clear</button>
 		</div>
 	);
-} 
+}

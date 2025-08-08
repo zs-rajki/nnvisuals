@@ -28,6 +28,12 @@ body {
     color: #FFFFFF;
     text-align: center;
 }
+.title h1 {
+    font-family: "Geist", sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    color: #FFFFFF;
+}
 
 .canvas {
     grid-area: canvas;
@@ -51,4 +57,17 @@ footer {
     width: 100vw;
     border-top: 1px solid #858585;
     padding: 2rem 0;
+}
+
+@media only screen and (max-width: 800px) {
+    .grid {
+        display: grid;
+        grid-template-areas:
+        'title'
+        'canvas'
+        'network';
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+        padding: 0.5rem;
+    }
 }
