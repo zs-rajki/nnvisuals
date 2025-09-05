@@ -10,15 +10,16 @@ export default function Canvas({ onGridChange }) {
 		Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(0))
 	);
 	const [drawing, setDrawing] = useState(false);
-	const [cellSize, setCellSize] = useState(10); // dynamic later
+	const [cellSize, setCellSize] = useState(10);
 
 	// Resize canvas on window/container resize
 	const resizeCanvas = useCallback(() => {
 		const container = containerRef.current;
 		if (!container) return;
 
-		const width = container.clientWidth;
-		const size = Math.floor(width / GRID_SIZE);
+		// Take min(width, height) so canvas is always square
+		const sizeAvailable = Math.min(container.clientWidth, container.clientHeight);
+		const size = Math.floor(sizeAvailable / GRID_SIZE);
 		setCellSize(size);
 
 		const canvas = canvasRef.current;
@@ -52,51 +53,37 @@ export default function Canvas({ onGridChange }) {
 		if (onGridChange) onGridChange(grid);
 	}, [grid, onGridChange]);
 
-    // -----------Canvas without grid--------------------------
-    // 
-	// const drawGrid = (ctx, gridData, size) => {
-	// 	ctx.clearRect(0, 0, GRID_SIZE * size, GRID_SIZE * size);
-	// 	for (let y = 0; y < GRID_SIZE; y++) {
-	// 		for (let x = 0; x < GRID_SIZE; x++) {
-	// 			const val = gridData[y][x];
-	// 			const shade = Math.round(val * 255);
-	// 			ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
-	// 			ctx.fillRect(x * size, y * size, size, size);
-	// 		}
-	// 	}
-	// };
+	const drawGrid = (ctx, gridData, size) => {
+		ctx.clearRect(0, 0, GRID_SIZE * size, GRID_SIZE * size);
 
-    const drawGrid = (ctx, gridData, size) => {
-        ctx.clearRect(0, 0, GRID_SIZE * size, GRID_SIZE * size);
-    
-        // Fill each cell with grayscale color
-        for (let y = 0; y < GRID_SIZE; y++) {
-            for (let x = 0; x < GRID_SIZE; x++) {
-                const val = gridData[y][x];
-                const shade = Math.round(val * 255);
-                ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
-                ctx.fillRect(x * size, y * size, size, size);
-            }
-        }
-    
-        // Draw grid lines
-        ctx.strokeStyle = 'rgba(200, 200, 200, 0.7)'; // light gray
-        ctx.lineWidth = 0.5;
-    
-        for (let i = 0; i <= GRID_SIZE; i++) {
-            // vertical line
-            ctx.beginPath();
-            ctx.moveTo(i * size, 0);
-            ctx.lineTo(i * size, GRID_SIZE * size);
-            ctx.stroke();
-    
-            // horizontal line
-            ctx.beginPath();
-            ctx.moveTo(0, i * size);
-            ctx.lineTo(GRID_SIZE * size, i * size);
-            ctx.stroke();
-        }
-    };
+		// Fill each cell with grayscale color
+		for (let y = 0; y < GRID_SIZE; y++) {
+			for (let x = 0; x < GRID_SIZE; x++) {
+				const val = gridData[y][x];
+				const shade = Math.round(val * 255);
+				ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
+				ctx.fillRect(x * size, y * size, size, size);
+			}
+		}
+
+		// Draw grid lines
+		ctx.strokeStyle = 'rgba(200, 200, 200, 0.7)'; // light gray
+		ctx.lineWidth = 0.5;
+
+		for (let i = 0; i <= GRID_SIZE; i++) {
+			// vertical line
+			ctx.beginPath();
+			ctx.moveTo(i * size, 0);
+			ctx.lineTo(i * size, GRID_SIZE * size);
+			ctx.stroke();
+
+			// horizontal line
+			ctx.beginPath();
+			ctx.moveTo(0, i * size);
+			ctx.lineTo(GRID_SIZE * size, i * size);
+			ctx.stroke();
+		}
+	};
 
 	const getCellFromEvent = (e) => {
 		const rect = canvasRef.current.getBoundingClientRect();
@@ -150,16 +137,23 @@ export default function Canvas({ onGridChange }) {
 	};
 
 	return (
-		<div ref={containerRef} className={styles.canvasContainer}>
-			<canvas
-				ref={canvasRef}
-				className={styles.canvas}
-				onPointerDown={handlePointerDown}
-				onPointerMove={handlePointerMove}
-				onPointerUp={handlePointerUp}
-				onPointerLeave={handlePointerUp}
-			/>
-			<button className={styles.clearButton} onClick={handleClear}>Clear</button>
+		<div className={styles.canvasGrid}>
+			<div className={styles.text}>
+				Draw a digit from 0-9 and then see how this simple neural network predicts it!
+			</div>
+			<div ref={containerRef} className={styles.canvasContainer}>
+				<canvas
+					ref={canvasRef}
+					className={styles.canvas}
+					onPointerDown={handlePointerDown}
+					onPointerMove={handlePointerMove}
+					onPointerUp={handlePointerUp}
+					onPointerLeave={handlePointerUp}
+				/>
+			</div>
+			<div className={styles.buttonContainer}>
+				<button className={styles.clearButton} onClick={handleClear}>Clear</button>
+			</div>
 		</div>
 	);
 }

@@ -15,23 +15,25 @@ body {
 .grid {
     display: grid;
     grid-template-areas:
-    'title network'
-    'canvas network';
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    padding: 3rem;
+    'title title'
+    'canvas network'
+    'footer footer';
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-rows: 10vh 1fr 8vh;
     width: 100vw;
+    height: 100vh;
 }
 
 .title {
     grid-area: title;
-    color: #FFFFFF;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .title h1 {
     font-family: "Geist", sans-serif;
     font-weight: 900;
-    font-size: 3rem;
+    font-size: clamp(1.5rem, 5vw, 5rem);
     color: #FFFFFF;
 }
 
@@ -41,22 +43,24 @@ body {
 
 .network {
     grid-area: network;
+    background-color: green;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; */
+}
+
+.footer {
+    grid-area: footer;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-}
-
-footer {
     font-family: monospace;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 1vw, 1.5rem);
     color: #FFFFFF;
-    text-align: center;
     background: linear-gradient(to bottom, #151616, #000000);
-    width: 100vw;
     border-top: 1px solid #858585;
-    padding: 2rem 0;
 }
 
 @media only screen and (max-width: 600px) {
@@ -64,10 +68,12 @@ footer {
         display: grid;
         grid-template-areas:
         'title'
+        'network'
         'canvas'
-        'network';
+        'footer';
         grid-template-columns: auto;
-        grid-template-rows: auto;
-        padding: 0.5rem;
+        grid-template-rows: 10vh 1.5fr 1fr 10vh;
+        width: 100vw;
+        height: 100vh;
     }
 }

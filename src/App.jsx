@@ -16,12 +16,12 @@ function App() {
                     <Canvas onGridChange={setGrid} />
                 </div>
                 <div className="network">
-                    <NeuralNetwork grid={grid} center={true}/>
+                    {/* <NeuralNetwork grid={grid} center={true}/> */}
+                </div>
+                <div className="footer">
+                    <span>&copy; <span>{new Date().getFullYear()}</span> Zsombor Rajki. All Rights Reserved.</span>
                 </div>
             </div>
-            <footer>
-                &copy; <span>{new Date().getFullYear()}</span> Zsombor Rajki. All Rights Reserved.
-            </footer>
         </>
     )
 }
