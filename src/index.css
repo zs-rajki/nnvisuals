@@ -22,7 +22,6 @@ body {
     grid-template-rows: 10vh 1fr 8vh;
     width: 100vw;
     height: 100vh;
-    gap: 2.5%
 }
 
 .title {
@@ -40,17 +39,20 @@ body {
 
 .canvas {
     grid-area: canvas;
+    padding: 2.5%;
+    padding-left: 5%;
 }
 
 .network {
     grid-area: network;
-    /* background-color: rgba(0, 128, 0, 0.208); */
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     width: 100%;
     height: 100%;
+    padding: 2.5%;
+    padding-right: 5%;
 }
 
 .footer {
@@ -78,5 +80,12 @@ body {
         grid-template-rows: 10vh 1.5fr 1fr 10vh;
         width: 100vw;
         height: 100vh;
+    }
+    .canvas {
+        padding: 2.5%;
+    }
+
+    .network {
+        padding: 2.5%;
     }
 }

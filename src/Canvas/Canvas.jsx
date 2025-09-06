@@ -139,7 +139,7 @@ export default function Canvas({ onGridChange }) {
 	return (
 		<div className={styles.canvasGrid}>
 			<div className={styles.text}>
-				Draw a digit from 0-9 and then see how this simple neural network predicts it!
+                Draw any digit (0-9) and then see how this simple Neural Network predicts it!
 			</div>
 			<div ref={containerRef} className={styles.canvasContainer}>
 				<canvas
@@ -152,7 +152,11 @@ export default function Canvas({ onGridChange }) {
 				/>
 			</div>
 			<div className={styles.buttonContainer}>
-				<button className={styles.clearButton} onClick={handleClear}>Clear</button>
+				<button className={styles.clearButton} onClick={handleClear}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M22 5a1 1 0 0 1-1 1H3a1 1 0 0 1 0-2h5V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1h5a1 1 0 0 1 1 1zM4.934 21.071 4 8h16l-.934 13.071a1 1 0 0 1-1 .929H5.931a1 1 0 0 1-.997-.929zM15 18a1 1 0 0 0 2 0v-6a1 1 0 0 0-2 0zm-4 0a1 1 0 0 0 2 0v-6a1 1 0 0 0-2 0zm-4 0a1 1 0 0 0 2 0v-6a1 1 0 0 0-2 0z"/>
+                    </svg>
+                </button>
 			</div>
 		</div>
 	);
