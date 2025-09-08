@@ -1,9 +1,9 @@
 {
-  "name": "nn-visualizer",
+  "name": "nnvisuals",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://zs-rajki.github.io/nnVisualizer",
+  "homepage": "https://zs-rajki.github.io/nnvisuals",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
